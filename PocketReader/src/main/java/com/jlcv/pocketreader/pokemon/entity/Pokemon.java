@@ -20,6 +20,4 @@ public class Pokemon {
     @NotNull(message="{NotNull.Pokemon.pokemonName}")
     private String pokemonName;
 
-
-
 }

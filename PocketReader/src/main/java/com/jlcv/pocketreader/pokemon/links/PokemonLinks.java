@@ -6,5 +6,5 @@ import org.springframework.stereotype.Component;
 public class PokemonLinks {
 	
 	public static final String LIST_POKEMON = "/pokemon";
-
+	
 }

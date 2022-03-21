@@ -20,20 +20,19 @@ export default Logo;
 // Styled component named StyledButton
 const Container = styled.div`
   background: ${(props: {backgroundColor: string}) => props.backgroundColor};
-  width: 500px;
-  height: 300px;
-  display: flex;
-  justify-content: center;
-  align-items:center;
-  margin:auto; 
+  height:100%;
+  width:100%;
+  flex-direction: column;
+  align-items: center;
 `;
 
 // Styled component named Logo
 const LogoItself = styled.div`
   background-image: url(${(props: {imageUrl: string}) => props.imageUrl});
-  width: 500px;
-  height: 300px;
+  width: 100%;
+  height: 100%;
+  background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
-  display: block;
+
 `;

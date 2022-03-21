@@ -49,6 +49,7 @@ const LoginScreen = () => {
             value={email}
             onChange={(input) => setEmail(input.target.value)}
           ></TextInput>
+          <div>{''}</div>
           <TextInput
             type="password"
             value={password}
@@ -65,6 +66,7 @@ const LoginScreen = () => {
           <CreateAccountButton>Create Account</CreateAccountButton>
         </InputCard>
       </Modal>
+      <BottomHeader></BottomHeader>
     </Background>
   );
 };
@@ -82,40 +84,39 @@ const Background = styled.div`
   background-color: #BB0F15;
   display: flex;
   flex-direction: column;
-`
-
-const Header = styled.h1`
-  padding-top: 1%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width 100%;
-  height: 100%;
   flex:1;
 `
 
+const Header = styled.h1`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 30%;
+  height: 40%;
+  flex: 1;
+`
+
 const Modal = styled.div`
-  margin-top: -5%;
   display: flex;
   align-items: center;
   justify-content: center;
   width 100%;
   height: 100%;
-  transform: translateY(-50%, -50%);
+  flex-direction: row;
+  flex: 30;
 `
 
 // Create a Title component that'll render an <h1> tag with some styles
 const InputCard = styled.div`
   justify-content: center;
-  height: auto;
-  width: 30%;
-  max-width: 30%;
-  min-width: 500px;
+  min-width: 20em;
   background-color: #AE0E14;
   display: flex;
   flex-direction: column;
   padding-bottom: 30px;
   padding-top: 25px;
+  padding-right: 30px;
+  padding-left: 30px;
   border-radius: 15px;
   margin:auto; 
 `;
@@ -125,31 +126,37 @@ const LoginTitleText = styled.div`
   height: 100%;
   margin-top: 3%;
   margin-bottom: 2%;
-  font-size: 1.4em;
+  font-size: 1.2em;
   color: white;
   font-family: Lucida Grande;
   padding:10px;
   display: block;
 `;
 
+const BottomHeader = styled.div`
+  flex: 1;
+  height: 20%;
+  background-color: #363636;
+`
+
 const TextInput = styled.input`
-  height: 100%;
-  margin: 10px;
-  margin-left: 20px;
-  margin-right: 20px;
-  box-sizing: border-box;
-  border: 3px solid #ccc;
-  outline: none;
-  border-radius: 15px;
-  color: black;
+margin-bottom: 5px;
+margin-top: 5px;
+
+height: 100%;
+width: 100%;
+box-sizing: border-box;
+border: 3px solid #ccc;
+outline: none;
+border-radius: 15px;
+color: black;
+font-family: Lucida Grande;
+font-size: 1.5em;
+padding:10px;
+::placeholder {
+  color: grey;
   font-family: Lucida Grande;
-  font-size: 1.5em;
-  padding-left: 15px;
-  padding:10px;
-  ::placeholder {
-    color: grey;
-    font-family: Lucida Grande;
-  }
+}
 `;
 
 const LoginButton = styled.button`
@@ -176,7 +183,7 @@ const ErrorText = styled.div`
 
 
 const CreateTitleText = styled.div`
-  font-size: 1.2em;
+  font-size: 1em;
   color: white;
   font-family: Lucida Grande;
   text-align: center;
