@@ -84,16 +84,19 @@ const Background = styled.div`
   background-color: #BB0F15;
   display: flex;
   flex-direction: column;
-  flex:1;
 `
 
 const Header = styled.h1`
+  padding-top: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 30%;
-  height: 40%;
-  flex: 1;
+  width: 100%
+  min-height: 200px;
+  height: 200px;
+  flex: 15;
+  padding-bottom: 5px;
+
 `
 
 const Modal = styled.div`
@@ -135,14 +138,13 @@ const LoginTitleText = styled.div`
 
 const BottomHeader = styled.div`
   flex: 1;
-  height: 20%;
   background-color: #363636;
+  width:100%;
 `
 
 const TextInput = styled.input`
 margin-bottom: 5px;
 margin-top: 5px;
-
 height: 100%;
 width: 100%;
 box-sizing: border-box;

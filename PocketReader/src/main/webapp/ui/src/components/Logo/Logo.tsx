@@ -17,22 +17,24 @@ const Logo: React.FunctionComponent<LogoProps> = ({imageUrl, backgroundColor = '
 );
 export default Logo;
 
+
 // Styled component named StyledButton
 const Container = styled.div`
   background: ${(props: {backgroundColor: string}) => props.backgroundColor};
-  height:100%;
-  width:100%;
-  flex-direction: column;
-  align-items: center;
+  width: 500px;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items:center;
+  margin:auto; 
 `;
 
 // Styled component named Logo
 const LogoItself = styled.div`
   background-image: url(${(props: {imageUrl: string}) => props.imageUrl});
-  width: 100%;
-  height: 100%;
-  background-position: center;
+  width: 500px;
+  height: 300px;
   background-size: contain;
   background-repeat: no-repeat;
-
+  display: block;
 `;
