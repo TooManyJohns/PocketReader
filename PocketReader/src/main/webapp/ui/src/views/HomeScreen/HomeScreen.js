@@ -2,17 +2,30 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 import { getAllPokemon } from '../../services/PokemonService'
+import { getModel } from '../../services/ModelService'
 import logoImg from "../../assets/pocketdexlogo.png";
 
 import Logo from "../../components/Logo/Logo";
 import PokemonBox from "../../components/PokemonBox/PokemonBox";
 import PokemonComparisonBox from "../../components/PokemonComparisonBox/PokemonComparisonBox";
+import * as tf from '@tensorflow/tfjs'
+import * as cvstfjs from "@microsoft/customvision-tfjs";
 
 const HomeScreen = () => {
   const [pokemonList, setPokemonList] = useState({ id: 0, pokemonName: '' });
   const [filterShow, setFilterShow] = useState(false);
   const [pokemonUploadImage, setPokemonUploadImage] = useState("");
+  const [model, setModel] = useState(false);
+  const [predictionList, setPredictionList] = useState([]);
+  const webcamRef = React.useRef(null);
+  const [topResults, setTopResults] = useState([]);
+  const [pokemonQueried, setPokemonQueried] = useState("");
 
+  const TARGET_CLASSES = {
+    0: "Bulbasaur",
+    1: "Charmander",
+    2: "Squirtle"
+  };
   // Similar to component will mount, in order to prevent it from rendering beforehand, 
   // put it in the fetchPokemonList async function above but with current implementation 
   //we can have it display data as soon
@@ -25,6 +38,14 @@ const HomeScreen = () => {
           setPokemonList(items)
         }
       })
+    getModel()
+      .then(items => {
+        if (mounted) {
+          console.log( "Model loaded." );
+          setModel(items)
+          console.log(model)
+        }
+    })
     
     
 
@@ -39,12 +60,44 @@ const HomeScreen = () => {
   };
 
   const handleImgUpload = (event) => {
-    console.log(event.target.files[0]);
+    console.log(event.target.files[0].src);
     setPokemonUploadImage(event.target.files[0]);
+    setPredictionList([]);
   };
+
+  const handlePredictClick = async event => {
+    if (!pokemonUploadImage) { alert("Please select an image first"); return; }
+    let model = new cvstfjs.ClassificationModel();
+    await model.loadModelAsync('model/model.json');
+    const image = document.getElementById('image1');
+    const result = await model.executeAsync(image);
+    let top5 = (result[0])
+		.map(function (p, i) { // this is Array.map
+			return {
+				probability: p,
+				className: TARGET_CLASSES[i] // we are selecting the value from the obj
+			};
+		}).sort(function (a, b) {
+			return b.probability - a.probability;
+		}).slice(0, 2);
+    console.log(top5[0].className)
+    setPokemonQueried(top5[0].className)
+    console.log(`https://pocket-dex-bucket.s3.us-east-2.amazonaws.com/${pokemonQueried}/${pokemonQueried.toLowerCase()}_1.png`)
+  };
+//  might need, ref to "image"
+//    <img id="image" src={URL.createObjectURL(pokemonUploadImage)}></img>
+
+
 
   return (
     <Background>
+            {
+              // Show loading if model hasnt loaded yet
+              !model && 
+              <div>LOADING!</div>
+            }
+            {
+              model &&    
       <Modal>
           <PokemonListTopCard>
             <PokemonListLogoCard>
@@ -56,8 +109,9 @@ const HomeScreen = () => {
             {
               pokemonUploadImage &&
               <ComparisonBoxCtn>
-              <PokemonComparisonBox pokemonImgUrl={pokemonUploadImage}></PokemonComparisonBox>
-              <PokemonComparisonBox pokemonS3Url={`https://pocket-dex-bucket.s3.us-east-2.amazonaws.com/${pokemonList[0]?.keyName}.png`}></PokemonComparisonBox>
+              <PokemonComparisonBox pokemonImgUrl={pokemonUploadImage}>
+              </PokemonComparisonBox>
+              <PokemonComparisonBox pokemonS3Url={`https://pocket-dex-bucket.s3.us-east-2.amazonaws.com/${pokemonQueried}/${pokemonQueried.toLowerCase()}_1.png`}></PokemonComparisonBox>
               </ComparisonBoxCtn>
             }
 
@@ -67,11 +121,9 @@ const HomeScreen = () => {
               <FilterButton onClick={
                 () => setFilterShow(!filterShow)
               }>Filter</FilterButton>
-              <TextInput
-                maxLength={320}
-                type="text"
-                placeholder="Pokemon Name"
-              ></TextInput>
+              <FilterButton onClick={
+                handlePredictClick
+              }>Predict</FilterButton>
               <UploadButton
               onClick={handleClick}>Search via Upload</UploadButton>
               <input type="file"
@@ -103,9 +155,15 @@ const HomeScreen = () => {
             <PokemonBox pokemonName={pokemonList[0]?.pokemonName} pokemonNumber={pokemonList[0]?.id} pokemonS3Url={pokemonList[0]?.keyName}></PokemonBox>
             <PokemonBox pokemonName={pokemonList[1]?.pokemonName} pokemonNumber={pokemonList[1]?.id} pokemonS3Url={pokemonList[1]?.keyName}></PokemonBox>
             <PokemonBox pokemonName={pokemonList[2]?.pokemonName} pokemonNumber={pokemonList[2]?.id} pokemonS3Url={pokemonList[2]?.keyName}></PokemonBox>
-          </PokemonListMainCard>
+            {
+              topResults &&
+              <div>{topResults[0]}</div>
+            }
+           </PokemonListMainCard>
       </Modal>
+       }
       <BottomHeader></BottomHeader>
+      
     </Background>
   );
 }

@@ -15,7 +15,7 @@ const PokemonComparisonBox: React.FC<PokemonComparisonBoxProps> = ({ pokemonImgU
         pokemonImgUrl &&
         <div>
         <PokemonInputTitle>Input Pokemon</PokemonInputTitle>
-        <PokemonComparisonCard pokemonImgUrl= {URL.createObjectURL(pokemonImgUrl)}></PokemonComparisonCard>
+        <PokemonComparisonCard id="image1" src={URL.createObjectURL(pokemonImgUrl)} pokemonImgUrl= {URL.createObjectURL(pokemonImgUrl)}></PokemonComparisonCard>
         </div>
     }
         {
@@ -48,7 +48,7 @@ const PokemonInputTitle = styled.div`
 `;
 
 // Styled component named Logo
-const PokemonComparisonCard = styled.div`
+const PokemonComparisonCard = styled.img`
   background-image: url(${(props: {pokemonImgUrl: string}) => props.pokemonImgUrl});
   width: 200px;
   background-color: #819EE6;
