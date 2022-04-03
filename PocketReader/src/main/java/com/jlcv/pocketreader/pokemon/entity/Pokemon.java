@@ -19,5 +19,9 @@ public class Pokemon {
     @Column
     @NotNull(message="{NotNull.Pokemon.pokemonName}")
     private String pokemonName;
+    
+    @Column
+    @NotNull(message="{NotNull.Pokemon.pokemonName}")
+    private String keyName;
 
 }

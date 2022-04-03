@@ -5,10 +5,13 @@ import { getAllPokemon } from '../../services/PokemonService'
 import logoImg from "../../assets/pocketdexlogo.png";
 
 import Logo from "../../components/Logo/Logo";
+import PokemonBox from "../../components/PokemonBox/PokemonBox";
+import PokemonComparisonBox from "../../components/PokemonComparisonBox/PokemonComparisonBox";
 
 const HomeScreen = () => {
   const [pokemonList, setPokemonList] = useState({ id: 0, pokemonName: '' });
   const [filterShow, setFilterShow] = useState(false);
+  const [pokemonUploadImage, setPokemonUploadImage] = useState("");
 
   // Similar to component will mount, in order to prevent it from rendering beforehand, 
   // put it in the fetchPokemonList async function above but with current implementation 
@@ -22,17 +25,43 @@ const HomeScreen = () => {
           setPokemonList(items)
         }
       })
+    
+    
 
     return () => mounted = false;
   }, [])
-  console.log(filterShow)
+  console.log(`Is filter showing:  ${filterShow}`);
+
+  const hiddenFileInput = React.useRef(null);
+  
+  const handleClick = event => {
+    hiddenFileInput.current.click();
+  };
+
+  const handleImgUpload = (event) => {
+    console.log(event.target.files[0]);
+    setPokemonUploadImage(event.target.files[0]);
+  };
 
   return (
     <Background>
       <Modal>
           <PokemonListTopCard>
             <PokemonListLogoCard>
+            {
+              // Show logo image if we haven't uploaded an image to compare yet
+              !pokemonUploadImage &&
               <Logo imageUrl={logoImg}></Logo>
+            }
+            {
+              pokemonUploadImage &&
+              <ComparisonBoxCtn>
+              <PokemonComparisonBox pokemonImgUrl={pokemonUploadImage}></PokemonComparisonBox>
+              <PokemonComparisonBox pokemonS3Url={`https://pocket-dex-bucket.s3.us-east-2.amazonaws.com/${pokemonList[0]?.keyName}.png`}></PokemonComparisonBox>
+              </ComparisonBoxCtn>
+            }
+
+            
             </PokemonListLogoCard>
             <PokemonListSearchCard>
               <FilterButton onClick={
@@ -43,7 +72,13 @@ const HomeScreen = () => {
                 type="text"
                 placeholder="Pokemon Name"
               ></TextInput>
-              <UploadButton>Search via Upload</UploadButton>
+              <UploadButton
+              onClick={handleClick}>Search via Upload</UploadButton>
+              <input type="file"
+             ref={hiddenFileInput}
+             onChange={handleImgUpload}
+             style={{display:'none'}} 
+             /> 
             </PokemonListSearchCard>
           </PokemonListTopCard>
           {
@@ -65,10 +100,9 @@ const HomeScreen = () => {
               </FilterTableCard>
             }
           <PokemonListMainCard>
-            <p>{pokemonList[0]?.id}</p>
-            <p>{pokemonList[0]?.pokemonName}</p>
-            <p>{pokemonList[1]?.id}</p>
-            <p>{pokemonList[1]?.pokemonName}</p>
+            <PokemonBox pokemonName={pokemonList[0]?.pokemonName} pokemonNumber={pokemonList[0]?.id} pokemonS3Url={pokemonList[0]?.keyName}></PokemonBox>
+            <PokemonBox pokemonName={pokemonList[1]?.pokemonName} pokemonNumber={pokemonList[1]?.id} pokemonS3Url={pokemonList[1]?.keyName}></PokemonBox>
+            <PokemonBox pokemonName={pokemonList[2]?.pokemonName} pokemonNumber={pokemonList[2]?.id} pokemonS3Url={pokemonList[2]?.keyName}></PokemonBox>
           </PokemonListMainCard>
       </Modal>
       <BottomHeader></BottomHeader>
@@ -77,6 +111,14 @@ const HomeScreen = () => {
 }
 
 export default HomeScreen;
+
+//Temp styler for containing comparison of images
+const ComparisonBoxCtn = styled.div`
+  flex: 1;
+  display:flex;
+  flex-direction: row;
+`
+
 
 const BottomHeader = styled.div`
   flex: 1;
@@ -140,12 +182,13 @@ const PokemonListSearchCard = styled.div`
   border-top-right-radius: 10px;
 `
 
+
 // Stores the list of Pokemon that are filtered by the PokemonListtitleCard's Search Card
 const PokemonListMainCard = styled.div`
   width: 100%;
   height: 70%;
   background-size: cover;
-  justify-content: center;
+  justify-content: left;
   background-color: lightblue;
   display: flex;
   flex-direction: row;
@@ -210,6 +253,8 @@ const FilterTableCard = styled.div`
   flex-direction: row;
   background-color: white;
   flex-wrap: wrap;
+  box-shadow: inset 0px 0px 0px 5px #363636;
+
 `
 
 // Flex-basis set to % to eliminate need for fitting an extra item.
