@@ -2,18 +2,22 @@
 
 Build:
 (at root of repo)
+
 mvn clean install
+
 java -jar target/PocketReader-0.0.1-SNAPSHOT.jar
 
-Run Frontend:
+## Run Frontend:
+
 (under root/src/main/webapp/ui)
+
 npm start
 
-Important information:
+## Important information:
 So, as of right now, there isn't a proper build of our application so installation of Node and Maven along with Ecclipse would help when building this project successfully, along with PostgreSQL (Email me @ jlutz@cmail.carleton.ca for DB Information)
 
 
-Relevent parts of Repo: 
+## Relevent parts of Repo: 
 
 Frontend is under https://github.com/TooManyJohns/PocketReader/tree/main/PocketReader/src/main/webapp/ui/src where you can find relevent code for loading our model we created using CustomVision AI. 
 
