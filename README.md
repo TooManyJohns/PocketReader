@@ -1,6 +1,6 @@
 # PocketReader
 
-Build:
+## Build:
 (at root of repo)
 
 mvn clean install
